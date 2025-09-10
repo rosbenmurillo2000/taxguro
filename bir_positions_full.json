@@ -1,0 +1,192 @@
+{
+  "2551Q": {
+    "business_name": [
+      90,
+      110
+    ],
+    "tin": [
+      90,
+      130
+    ],
+    "quarter": [
+      495,
+      110
+    ],
+    "year": [
+      540,
+      110
+    ],
+    "period": [
+      90,
+      150
+    ],
+    "part1_line13_gross_sales": [
+      455,
+      240
+    ],
+    "part1_line18_tax_due": [
+      455,
+      280
+    ],
+    "signature_name": [
+      120,
+      760
+    ],
+    "signature_date": [
+      420,
+      760
+    ]
+  },
+  "1701Q_grad": {
+    "business_name": [
+      90,
+      110
+    ],
+    "tin": [
+      90,
+      130
+    ],
+    "quarter": [
+      495,
+      110
+    ],
+    "year": [
+      540,
+      110
+    ],
+    "sched1_gross": [
+      455,
+      240
+    ],
+    "sched1_deductions": [
+      455,
+      268
+    ],
+    "sched1_net_income": [
+      455,
+      296
+    ],
+    "sched1_tax_due": [
+      455,
+      324
+    ],
+    "signature_name": [
+      120,
+      760
+    ],
+    "signature_date": [
+      420,
+      760
+    ]
+  },
+  "1701Q_8pct": {
+    "business_name": [
+      90,
+      110
+    ],
+    "tin": [
+      90,
+      130
+    ],
+    "quarter": [
+      495,
+      110
+    ],
+    "year": [
+      540,
+      110
+    ],
+    "ytd_gross": [
+      455,
+      240
+    ],
+    "tax_base_over_250k": [
+      455,
+      268
+    ],
+    "eight_pct_tax": [
+      455,
+      296
+    ],
+    "signature_name": [
+      120,
+      760
+    ],
+    "signature_date": [
+      420,
+      760
+    ]
+  },
+  "1701A_grad": {
+    "business_name": [
+      90,
+      110
+    ],
+    "tin": [
+      90,
+      130
+    ],
+    "year": [
+      540,
+      110
+    ],
+    "sched1_gross": [
+      455,
+      240
+    ],
+    "sched1_deductions": [
+      455,
+      268
+    ],
+    "sched1_net_income": [
+      455,
+      296
+    ],
+    "sched1_tax_due": [
+      455,
+      324
+    ],
+    "signature_name": [
+      120,
+      760
+    ],
+    "signature_date": [
+      420,
+      760
+    ]
+  },
+  "1701A_8pct": {
+    "business_name": [
+      90,
+      110
+    ],
+    "tin": [
+      90,
+      130
+    ],
+    "year": [
+      540,
+      110
+    ],
+    "gross": [
+      455,
+      240
+    ],
+    "base_over_250k": [
+      455,
+      268
+    ],
+    "eight_pct_tax": [
+      455,
+      296
+    ],
+    "signature_name": [
+      120,
+      760
+    ],
+    "signature_date": [
+      420,
+      760
+    ]
+  }
+}
