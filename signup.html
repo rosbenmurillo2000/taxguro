@@ -1,0 +1,20 @@
+<!doctype html><html><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sign up — PH Small Biz</title>
+<style>body{font-family:system-ui;margin:0;background:#f6f7fb;color:#111} .wrap{max-width:420px;margin:5rem auto;background:#fff;padding:1rem 1.2rem;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.06)} input,button{width:100%;padding:.7rem;border:1px solid #dadde5;border-radius:10px;margin:.3rem 0} button{background:#1f6feb;color:#fff;border:none;cursor:pointer}</style>
+</head><body><div class="wrap">
+  <h2>Create account</h2>
+  <input id="name" placeholder="Full name"/>
+  <input id="email" placeholder="Email"/>
+  <input id="pass" type="password" placeholder="Password (min 6)"/>
+  <button id="signup">Sign up</button>
+  <p>Have an account? <a href="login.html">Login</a></p>
+</div>
+<script type="module">
+signup.addEventListener('click', async ()=>{
+  const r = await fetch('/auth/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name.value,email:email.value,password:pass.value})});
+  if(!r.ok){ alert(await r.text()); return; }
+  location.href='/dashboard.html';
+});
+</script>
+</body></html>

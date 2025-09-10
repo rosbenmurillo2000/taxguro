@@ -1,0 +1,41 @@
+
+<!doctype html><html><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Import 2307 — PH Small Biz</title>
+<style>:root{font-family:system-ui} body{margin:0;background:#f6f7fb;color:#111} .wrap{max-width:860px;margin:2rem auto;padding:1rem} .card{background:#fff;padding:1rem;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.06);margin-bottom:1rem} textarea{width:100%;height:220px;padding:.6rem;border:1px solid #dadde5;border-radius:10px;font-family:ui-monospace,Menlo,Consolas,monospace} button{background:#1f6feb;color:#fff;border:none;cursor:pointer;padding:.6rem;border-radius:10px} .row{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap} nav a{margin-right:.6rem}</style>
+</head><body><div class="wrap">
+  <nav style="margin-bottom:1rem">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="forms.html">Tax Forms</a>
+    <a href="settings.html">Settings</a>
+    <a href="import.html">Import CSV</a>
+    <a href="import2307.html">Import 2307</a>
+    <a href="orgs.html">Organizations</a>
+  </nav>
+  <section class="card">
+    <h2>Import BIR 2307 (CSV → Credits)</h2>
+    <div class="row"><input id="file" type="file" accept=".csv"> <button id="uploadBtn">Upload CSV</button></div>
+    <p style="color:#666">— or paste CSV —</p>
+    <textarea id="csv" placeholder="date,amount,description,type
+2025-09-10,1500.00,2307 from Client A,withholding"></textarea>
+    <div style="margin-top:.8rem"><button id="importBtn">Import Pasted CSV</button></div>
+    <pre id="out"></pre>
+  </section>
+</div>
+<script type="module" src="/nav.js"></script>
+<script type="module">
+const out = document.getElementById('out');
+document.getElementById('uploadBtn').addEventListener('click', async ()=>{
+  const f = document.getElementById('file').files[0];
+  if (!f) { alert('Choose a CSV file first.'); return; }
+  const form = new FormData(); form.append('file', f);
+  const r = await fetch('/api/import/2307/upload', { method:'POST', body: form });
+  out.textContent = await r.text();
+});
+document.getElementById('importBtn').addEventListener('click', async ()=>{
+  const csv = document.getElementById('csv').value.trim();
+  const r = await fetch('/api/import/2307', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ csv }) });
+  out.textContent = await r.text();
+});
+</script>
+</body></html>

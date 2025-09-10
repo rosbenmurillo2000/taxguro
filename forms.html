@@ -1,0 +1,143 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tax Forms — PH Small Biz</title>
+  <style>
+  :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+  body { margin: 0; background: #f6f7fb; color: #111; }
+  .container { max-width: 980px; margin: 2rem auto; padding: 1rem; }
+  .card { background:#fff; padding:1rem; border-radius:14px; box-shadow:0 8px 24px rgba(0,0,0,.06); margin-bottom:1rem; }
+  .row { display:flex; gap:.6rem; align-items:center; flex-wrap: wrap; }
+  input, select, button { padding:.6rem .7rem; border:1px solid #dadde5; border-radius:10px; }
+  button { background:#1f6feb; color:#fff; border:none; cursor:pointer; }
+  pre { white-space: pre-wrap; }
+  nav a { margin-right:.6rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav style="margin-bottom:1rem">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="forms.html">Tax Forms</a>
+      <a href="settings.html">Settings</a>
+      <a href="import.html">Import CSV</a>
+      <a href="import2307.html">Import 2307</a>
+      <a href="orgs.html">Organizations</a>
+    </nav>
+
+    <section class="card">
+      <h2>Signer</h2>
+      <div class="row">
+        <input id="signer" placeholder="Signer name (auto-filled)" />
+        <input id="signed" type="date" />
+        <button id="refreshSigner">Auto-fill</button>
+      </div>
+      <p style="color:#666">Auto-fills from <code>/api/me</code> (name) and today's date.</p>
+    </section>
+
+    <section class="card">
+      <h2>Quarterly Percentage Tax — 2551Q</h2>
+      <div class="row">
+        <input id="y2551" type="number" placeholder="Year (e.g. 2025)" />
+        <select id="q2551">
+          <option value="1">Q1</option><option value="2">Q2</option><option value="3">Q3</option><option value="4">Q4</option>
+        </select>
+        <button id="btn2551">Compute</button>
+        <button id="print2551">Print official (PDF)</button>
+      </div>
+      <pre id="out2551"></pre>
+    </section>
+
+    <section class="card">
+      <h2>Quarterly Income Tax — 1701Q</h2>
+      <div class="row">
+        <input id="y1701q" type="number" placeholder="Year (e.g. 2025)" />
+        <select id="q1701q">
+          <option value="1">Q1</option><option value="2">Q2</option><option value="3">Q3</option><option value="4">Q4</option>
+        </select>
+        <select id="meth1701q">
+          <option value="osd">OSD (40%)</option>
+          <option value="itemized">Itemized</option>
+          <option value="8pct">8% on Gross</option>
+        </select>
+        <button id="btn1701q">Compute</button>
+        <button id="print1701q">Print official (PDF)</button>
+      </div>
+      <pre id="out1701q"></pre>
+    </section>
+
+    <section class="card">
+      <h2>Annual Income Tax — 1701A</h2>
+      <div class="row">
+        <input id="y1701a" type="number" placeholder="Year (e.g. 2025)" />
+        <select id="meth1701a">
+          <option value="osd">OSD (40%)</option>
+          <option value="itemized">Itemized</option>
+          <option value="8pct">8% on Gross</option>
+        </select>
+        <button id="btn1701a">Compute</button>
+        <button id="print1701a">Print official (PDF)</button>
+      </div>
+      <pre id="out1701a"></pre>
+    </section>
+  </div>
+<script type="module" src="/nav.js"></script>
+<script type="module">
+async function j(url){ const r = await fetch(url); if(!r.ok) throw new Error(await r.text()); return r.json(); }
+function today(){ const d = new Date(); return d.toISOString().slice(0,10); }
+async function autofillSigner(){
+  try { const me = await j('/api/me'); document.getElementById('signer').value = me?.name || me?.email || ''; } catch {}
+  document.getElementById('signed').value = today();
+}
+document.getElementById('refreshSigner').addEventListener('click', autofillSigner); autofillSigner();
+
+btn2551.addEventListener('click', async ()=>{
+  const y = +y2551.value, q = +q2551.value;
+  if(!y||!q) return alert('Enter year and quarter');
+  try { out2551.textContent = JSON.stringify(await j(`/api/reports/2551q?year=${y}&quarter=${q}`), null, 2); }
+  catch(e){ out2551.textContent = e.message; }
+});
+print2551.addEventListener('click', ()=>{
+  const y = +y2551.value, q = +q2551.value;
+  const signer = encodeURIComponent(document.getElementById('signer').value||'');
+  const signed = encodeURIComponent(document.getElementById('signed').value||today());
+  if(!y||!q) return alert('Enter year and quarter');
+  window.open(`/api/print/2551q-full?year=${y}&quarter=${q}&signer=${signer}&signed=${signed}`,'_blank');
+});
+
+btn1701q.addEventListener('click', async ()=>{
+  const y = +y1701q.value, q = +q1701q.value, m = meth1701q.value;
+  if(!y||!q) return alert('Enter year and quarter');
+  const mode = m==='8pct' ? '' : `&deduction=${m}`;
+  try { out1701q.textContent = JSON.stringify(await j(`/api/reports/1701q?year=${y}&quarter=${q}${mode}`), null, 2); }
+  catch(e){ out1701q.textContent = e.message; }
+});
+print1701q.addEventListener('click', ()=>{
+  const y = +y1701q.value, q = +q1701q.value, m = meth1701q.value;
+  const signer = encodeURIComponent(document.getElementById('signer').value||'');
+  const signed = encodeURIComponent(document.getElementById('signed').value||today());
+  if(!y||!q) return alert('Enter year and quarter');
+  const mode = m==='8pct' ? '&mode=8pct' : '&mode=graduated';
+  window.open(`/api/print/1701q-full?year=${y}&quarter=${q}${mode}&signer=${signer}&signed=${signed}`,'_blank');
+});
+
+btn1701a.addEventListener('click', async ()=>{
+  const y = +y1701a.value, m = meth1701a.value;
+  if(!y) return alert('Enter year');
+  const mode = m==='8pct' ? '' : `&deduction=${m}`;
+  try { out1701a.textContent = JSON.stringify(await j(`/api/reports/1701a?year=${y}${mode}`), null, 2); }
+  catch(e){ out1701a.textContent = e.message; }
+});
+print1701a.addEventListener('click', ()=>{
+  const y = +y1701a.value, m = meth1701a.value;
+  const signer = encodeURIComponent(document.getElementById('signer').value||'');
+  const signed = encodeURIComponent(document.getElementById('signed').value||today());
+  if(!y) return alert('Enter year');
+  window.open(`/api/print/1701a-full?year=${y}&signer=${signer}&signed=${signed}`,'_blank');
+});
+</script>
+</body>
+</html>
